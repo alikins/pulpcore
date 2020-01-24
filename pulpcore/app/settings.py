@@ -100,7 +100,7 @@ with suppress(ImportError):
     MIDDLEWARE.insert(0, 'django_prometheus.middleware.PrometheusBeforeMiddleware')
     MIDDLEWARE.append('django_prometheus.middleware.PrometheusAfterMiddleware')
 
-PROMETHEUS_METRICS_EXPORT_PORT = 8999
+# PROMETHEUS_METRICS_EXPORT_PORT = 8999
 
 
 AUTHENTICATION_BACKENDS = [
