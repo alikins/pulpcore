@@ -1,12 +1,45 @@
 from gettext import gettext as _
+import logging
 import uuid
 
 from django.db import models
 from django.db.models import options
 from django.db.models.base import ModelBase
 
+from django_prometheus.models import model_deletes, model_inserts, model_updates
 
-class Model(models.Model):
+log = logging.getLogger(__name__)
+
+
+class MetricsMixin(object):
+    def _do_insert(self, *args, **kwargs):
+        model_inserts.labels(self._model_name()).inc()
+        return super(MetricsMixin, self)._do_insert(*args, **kwargs)
+
+    def _do_update(self, *args, **kwargs):
+        model_updates.labels(self._model_name()).inc()
+        return super(MetricsMixin, self)._do_update(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        model_deletes.labels(self.model_name()).inc()
+        return super(MetricsMixin, self).delete(*args, **kwargs)
+
+    def _model_name(self):
+        self_name = self_pk = None
+        try:
+            # if we have a name, use it
+            self_name = self.name
+        except AttributeError:
+            # if we don't, use the pk
+            self_pk = self.pk
+
+        log.info('__class__.__name__: %s, self_name: %s, self_pk: %s',
+                 self.__class__.__name__, self_name, self_pk)
+        return super(MetricsMixin, self).__class__.__name__
+
+
+
+class Model(MetricsMixin, models.Model):
     """Base model class for all Pulp models.
 
     Fields:
