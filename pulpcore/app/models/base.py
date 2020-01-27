@@ -21,7 +21,7 @@ class MetricsMixin(object):
         return super(MetricsMixin, self)._do_update(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        model_deletes.labels(self.model_name()).inc()
+        model_deletes.labels(self._model_name()).inc()
         return super(MetricsMixin, self).delete(*args, **kwargs)
 
     def _model_name(self):
@@ -35,8 +35,7 @@ class MetricsMixin(object):
 
         log.info('__class__.__name__: %s, self_name: %s, self_pk: %s',
                  self.__class__.__name__, self_name, self_pk)
-        return super(MetricsMixin, self).__class__.__name__
-
+        return self.__class__.__name__
 
 
 class Model(MetricsMixin, models.Model):
