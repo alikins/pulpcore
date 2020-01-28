@@ -35,7 +35,7 @@ class MetricsMixin(object):
 
         log.info('__class__.__name__: %s, __name__ %s',
                  self.__class__.__name__, __name__)
-        return '%s.%s' % (self.__class__.__name__, __name__)
+        return '%s.%s' % (__name__, self.__class__.__name__)
 
 
 class Model(MetricsMixin, models.Model):
