@@ -33,9 +33,9 @@ class MetricsMixin(object):
             # if we don't, use the pk
             self_pk = self.pk
 
-        log.info('__class__.__name__: %s, self_name: %s, self_pk: %s',
-                 self.__class__.__name__, self_name, self_pk)
-        return self.__class__.__name__
+        log.info('__class__.__name__: %s, __name__ %s',
+                 self.__class__.__name__, __name__)
+        return '%s.%s' % (self.__class__.__name__, __name__)
 
 
 class Model(MetricsMixin, models.Model):
