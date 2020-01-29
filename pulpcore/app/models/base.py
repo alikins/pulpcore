@@ -25,16 +25,8 @@ class MetricsMixin(object):
         return super(MetricsMixin, self).delete(*args, **kwargs)
 
     def _model_name(self):
-        self_name = self_pk = None
-        try:
-            # if we have a name, use it
-            self_name = self.name
-        except AttributeError:
-            # if we don't, use the pk
-            self_pk = self.pk
-
-        log.info('__class__.__name__: %s, __name__ %s',
-                 self.__class__.__name__, self.__class__.__module__)
+        log.debug('__class__.__name__: %s, __name__ %s',
+                  self.__class__.__name__, self.__class__.__module__)
         return '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
 
 
