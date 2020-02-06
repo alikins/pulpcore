@@ -115,6 +115,7 @@ urlpatterns = [
     url(r'^{api_root}status/'.format(api_root=API_ROOT), StatusView.as_view()),
     url(r'^{api_root}orphans/'.format(api_root=API_ROOT), OrphansView.as_view()),
     url(r'^auth/', include('rest_framework.urls')),
+    url(r'^admin/', include('django.contrib.admin.site.urls')),
 ]
 
 api_info = openapi.Info(
