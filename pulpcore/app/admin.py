@@ -7,10 +7,10 @@ from pulpcore.app.models import (
     ContentArtifact,
     RemoteArtifact,
     FileSystemExporter,
-    ReservedResource,
-    TaskReservedResource,
-    ReservedResourceRecord,
-    TaskReservedResourceRecord,
+    # ReservedResource,
+    # TaskReservedResource,
+    # ReservedResourceRecord,
+    # TaskReservedResourceRecord,
     Worker,
     Task,
     CreatedResource,
@@ -117,54 +117,54 @@ class FileSystemExporterAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(ReservedResource)
-class ReservedResourceAdmin(admin.ModelAdmin):
-    list_display = (
-        'pulp_id',
-        'pulp_created',
-        'pulp_last_updated',
-        'resource',
-        'worker',
-    )
-    list_filter = ('pulp_created', 'pulp_last_updated', 'worker')
-    raw_id_fields = ('tasks',)
+# @admin.register(ReservedResource)
+# class ReservedResourceAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'pulp_id',
+#         'pulp_created',
+#         'pulp_last_updated',
+#         'resource',
+#         'worker',
+#     )
+#     list_filter = ('pulp_created', 'pulp_last_updated', 'worker')
+#     raw_id_fields = ('tasks',)
 
 
-@admin.register(TaskReservedResource)
-class TaskReservedResourceAdmin(admin.ModelAdmin):
-    list_display = (
-        'pulp_id',
-        'pulp_created',
-        'pulp_last_updated',
-        'resource',
-        'task',
-    )
-    list_filter = ('pulp_created', 'pulp_last_updated', 'resource', 'task')
+# @admin.register(TaskReservedResource)
+# class TaskReservedResourceAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'pulp_id',
+#         'pulp_created',
+#         'pulp_last_updated',
+#         'resource',
+#         'task',
+#     )
+#     list_filter = ('pulp_created', 'pulp_last_updated', 'resource', 'task')
 
 
-@admin.register(ReservedResourceRecord)
-class ReservedResourceRecordAdmin(admin.ModelAdmin):
-    list_display = (
-        'pulp_id',
-        'pulp_created',
-        'pulp_last_updated',
-        'resource',
-    )
-    list_filter = ('pulp_created', 'pulp_last_updated')
-    raw_id_fields = ('tasks',)
+# @admin.register(ReservedResourceRecord)
+# class ReservedResourceRecordAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'pulp_id',
+#         'pulp_created',
+#         'pulp_last_updated',
+#         'resource',
+#     )
+#     list_filter = ('pulp_created', 'pulp_last_updated')
+#     raw_id_fields = ('tasks',)
 
 
-@admin.register(TaskReservedResourceRecord)
-class TaskReservedResourceRecordAdmin(admin.ModelAdmin):
-    list_display = (
-        'pulp_id',
-        'pulp_created',
-        'pulp_last_updated',
-        'resource',
-        'task',
-    )
-    list_filter = ('pulp_created', 'pulp_last_updated')
-    raw_id_fields = ('resource', 'task')
+# @admin.register(TaskReservedResourceRecord)
+# class TaskReservedResourceRecordAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'pulp_id',
+#         'pulp_created',
+#         'pulp_last_updated',
+#         'resource',
+#         'task',
+#     )
+#     list_filter = ('pulp_created', 'pulp_last_updated')
+#     raw_id_fields = ('resource', 'task')
 
 
 @admin.register(Worker)
