@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from pulpcore.app.models import (
-    Permission,
-    Group,
-    User,
-)
+from .models import Permission, Group, User
 
 
 @admin.register(Permission)

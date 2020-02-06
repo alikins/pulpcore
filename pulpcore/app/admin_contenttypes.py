@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from pulpcore.app.models import (
-    ContentType,
-)
+from .models import ContentType
 
 
 @admin.register(ContentType)

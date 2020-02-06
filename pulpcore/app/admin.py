@@ -1,38 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from pulpcore.app.models import (
-    Artifact,
-    Content,
-    ContentArtifact,
-    RemoteArtifact,
-    FileSystemExporter,
-    # ReservedResource,
-    # TaskReservedResource,
-    # ReservedResourceRecord,
-    # TaskReservedResourceRecord,
-    Worker,
-    Task,
-    CreatedResource,
-    Repository,
-    Remote,
-    Publisher,
-    RepositoryContent,
-    RepositoryVersion,
-    RepositoryVersionContentDetails,
-    Publication,
-    PublishedArtifact,
-    PublishedMetadata,
-    ContentGuard,
-    BaseDistribution,
-    ContentAppStatus,
-    Upload,
-    UploadChunk,
-    ProgressReport
-)
-
-from pulpcore.app import admin_auth
-from pulpcore.app import admin_contenttypes
+from .models import Artifact, Content, ContentArtifact, RemoteArtifact, SigningService, AsciiArmoredDetachedSigningService, FileSystemExporter, ReservedResource, TaskReservedResource, ReservedResourceRecord, TaskReservedResourceRecord, Worker, Task, CreatedResource, Repository, Remote, RepositoryContent, RepositoryVersion, RepositoryVersionContentDetails, Publication, PublishedArtifact, PublishedMetadata, ContentGuard, BaseDistribution, ContentAppStatus, Upload, UploadChunk, ProgressReport
 
 
 @admin.register(Artifact)
@@ -103,6 +72,32 @@ class RemoteArtifactAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(SigningService)
+class SigningServiceAdmin(admin.ModelAdmin):
+    list_display = (
+        'pulp_id',
+        'pulp_created',
+        'pulp_last_updated',
+        'name',
+        'script',
+    )
+    list_filter = ('pulp_created', 'pulp_last_updated')
+    search_fields = ('name',)
+
+
+@admin.register(AsciiArmoredDetachedSigningService)
+class AsciiArmoredDetachedSigningServiceAdmin(admin.ModelAdmin):
+    list_display = (
+        'pulp_id',
+        'pulp_created',
+        'pulp_last_updated',
+        'name',
+        'script',
+    )
+    list_filter = ('pulp_created', 'pulp_last_updated')
+    search_fields = ('name',)
+
+
 @admin.register(FileSystemExporter)
 class FileSystemExporterAdmin(admin.ModelAdmin):
     list_display = (
@@ -117,54 +112,54 @@ class FileSystemExporterAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-# @admin.register(ReservedResource)
-# class ReservedResourceAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'pulp_id',
-#         'pulp_created',
-#         'pulp_last_updated',
-#         'resource',
-#         'worker',
-#     )
-#     list_filter = ('pulp_created', 'pulp_last_updated', 'worker')
-#     raw_id_fields = ('tasks',)
+@admin.register(ReservedResource)
+class ReservedResourceAdmin(admin.ModelAdmin):
+    list_display = (
+        'pulp_id',
+        'pulp_created',
+        'pulp_last_updated',
+        'resource',
+        'worker',
+    )
+    list_filter = ('pulp_created', 'pulp_last_updated', 'worker')
+    raw_id_fields = ('tasks',)
 
 
-# @admin.register(TaskReservedResource)
-# class TaskReservedResourceAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'pulp_id',
-#         'pulp_created',
-#         'pulp_last_updated',
-#         'resource',
-#         'task',
-#     )
-#     list_filter = ('pulp_created', 'pulp_last_updated', 'resource', 'task')
+@admin.register(TaskReservedResource)
+class TaskReservedResourceAdmin(admin.ModelAdmin):
+    list_display = (
+        'pulp_id',
+        'pulp_created',
+        'pulp_last_updated',
+        'resource',
+        'task',
+    )
+    list_filter = ('pulp_created', 'pulp_last_updated', 'resource', 'task')
 
 
-# @admin.register(ReservedResourceRecord)
-# class ReservedResourceRecordAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'pulp_id',
-#         'pulp_created',
-#         'pulp_last_updated',
-#         'resource',
-#     )
-#     list_filter = ('pulp_created', 'pulp_last_updated')
-#     raw_id_fields = ('tasks',)
+@admin.register(ReservedResourceRecord)
+class ReservedResourceRecordAdmin(admin.ModelAdmin):
+    list_display = (
+        'pulp_id',
+        'pulp_created',
+        'pulp_last_updated',
+        'resource',
+    )
+    list_filter = ('pulp_created', 'pulp_last_updated')
+    raw_id_fields = ('tasks',)
 
 
-# @admin.register(TaskReservedResourceRecord)
-# class TaskReservedResourceRecordAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'pulp_id',
-#         'pulp_created',
-#         'pulp_last_updated',
-#         'resource',
-#         'task',
-#     )
-#     list_filter = ('pulp_created', 'pulp_last_updated')
-#     raw_id_fields = ('resource', 'task')
+@admin.register(TaskReservedResourceRecord)
+class TaskReservedResourceRecordAdmin(admin.ModelAdmin):
+    list_display = (
+        'pulp_id',
+        'pulp_created',
+        'pulp_last_updated',
+        'resource',
+        'task',
+    )
+    list_filter = ('pulp_created', 'pulp_last_updated')
+    raw_id_fields = ('resource', 'task')
 
 
 @admin.register(Worker)
@@ -199,7 +194,6 @@ class TaskAdmin(admin.ModelAdmin):
         'started_at',
         'finished_at',
         'error',
-        'parent',
         'worker',
     )
     list_filter = (
@@ -208,7 +202,7 @@ class TaskAdmin(admin.ModelAdmin):
         'started_at',
         'finished_at',
     )
-    raw_id_fields = ('parent', 'worker')
+    raw_id_fields = ('worker',)
     search_fields = ('name',)
 
 
@@ -232,12 +226,12 @@ class RepositoryAdmin(admin.ModelAdmin):
         'pulp_id',
         'pulp_created',
         'pulp_last_updated',
+        'pulp_type',
         'name',
         'description',
         'last_version',
-        'plugin_managed',
     )
-    list_filter = ('pulp_created', 'pulp_last_updated', 'plugin_managed')
+    list_filter = ('pulp_created', 'pulp_last_updated')
     raw_id_fields = ('content',)
     search_fields = ('name',)
 
@@ -251,30 +245,17 @@ class RemoteAdmin(admin.ModelAdmin):
         'pulp_type',
         'name',
         'url',
-        'ssl_ca_certificate',
-        'ssl_client_certificate',
-        'ssl_client_key',
-        'ssl_validation',
-        'proxy_url',
+        'ca_cert',
+        'client_cert',
+        'client_key',
+        'tls_validation',
         'username',
         'password',
+        'proxy_url',
         'download_concurrency',
         'policy',
     )
-    list_filter = ('pulp_created', 'pulp_last_updated', 'ssl_validation')
-    search_fields = ('name',)
-
-
-@admin.register(Publisher)
-class PublisherAdmin(admin.ModelAdmin):
-    list_display = (
-        'pulp_id',
-        'pulp_created',
-        'pulp_last_updated',
-        'pulp_type',
-        'name',
-    )
-    list_filter = ('pulp_created', 'pulp_last_updated')
+    list_filter = ('pulp_created', 'pulp_last_updated', 'tls_validation')
     search_fields = ('name',)
 
 
@@ -333,7 +314,6 @@ class PublicationAdmin(admin.ModelAdmin):
         'pulp_type',
         'complete',
         'pass_through',
-        'publisher',
         'repository_version',
     )
     list_filter = (
@@ -341,7 +321,6 @@ class PublicationAdmin(admin.ModelAdmin):
         'pulp_last_updated',
         'complete',
         'pass_through',
-        'publisher',
         'repository_version',
     )
 
