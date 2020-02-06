@@ -1,7 +1,53 @@
-# -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .models import Artifact, Content, ContentArtifact, RemoteArtifact, SigningService, AsciiArmoredDetachedSigningService, FileSystemExporter, ReservedResource, TaskReservedResource, ReservedResourceRecord, TaskReservedResourceRecord, Worker, Task, CreatedResource, Repository, Remote, RepositoryContent, RepositoryVersion, RepositoryVersionContentDetails, Publication, PublishedArtifact, PublishedMetadata, ContentGuard, BaseDistribution, ContentAppStatus, Upload, UploadChunk, ProgressReport
+from django.contrib.contenttypes.models import (
+    ContentType,
+)
+
+from pulpcore.app.models import (
+    Artifact,
+    Content,
+    ContentArtifact,
+    RemoteArtifact,
+    SigningService,
+    AsciiArmoredDetachedSigningService,
+
+    FileSystemExporter,
+
+    Repository,
+    Remote,
+    RepositoryContent,
+    RepositoryVersion,
+    RepositoryVersionContentDetails,
+
+    Publication,
+    PublishedArtifact,
+    PublishedMetadata,
+    ContentGuard,
+    BaseDistribution,
+
+    ContentAppStatus,
+
+    Upload,
+    UploadChunk,
+
+    ProgressReport,
+)
+
+from pulpcore.app.models.task import (
+    ReservedResource,
+    TaskReservedResource,
+    ReservedResourceRecord,
+    TaskReservedResourceRecord,
+    Worker,
+    Task,
+    CreatedResource,
+)
+
+
+@admin.register(ContentType)
+class ContentTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'app_label', 'model')
 
 
 @admin.register(Artifact)
