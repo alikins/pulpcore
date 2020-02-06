@@ -2,6 +2,8 @@
 import logging
 
 from django.conf.urls import include, url
+from django.urls import path
+from django.contrib import admin
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view as yasg_get_schema_view
 from rest_framework import permissions
@@ -115,7 +117,7 @@ urlpatterns = [
     url(r'^{api_root}status/'.format(api_root=API_ROOT), StatusView.as_view()),
     url(r'^{api_root}orphans/'.format(api_root=API_ROOT), OrphansView.as_view()),
     url(r'^auth/', include('rest_framework.urls')),
-    url(r'^admin/', include('django.contrib.admin.site.urls')),
+    path('admin/', admin.site.urls),
 ]
 
 api_info = openapi.Info(
