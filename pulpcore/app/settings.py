@@ -46,6 +46,7 @@ SECRET_KEY = True
 INSTALLED_APPS = [
     # django stuff
     'django.contrib.admin',
+    'django.contric.admindocs',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

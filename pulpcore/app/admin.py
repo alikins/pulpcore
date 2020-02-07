@@ -5,6 +5,9 @@ from django.contrib.contenttypes.models import (
 )
 
 from pulpcore.app.models import (
+    # BaseModel,
+    # MasterModel,
+
     Artifact,
     Content,
     ContentArtifact,
@@ -45,13 +48,18 @@ from pulpcore.app.models.task import (
 )
 
 
+class BaseModelAdmin(admin.ModelAdmin):
+    readonly_fields = ('pulp_id', 'pulp_created', 'pulp_last_updated')
+    fields = ('pulp_id', 'pulp_created', 'pulp_last_updated')
+
+
 @admin.register(ContentType)
 class ContentTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'app_label', 'model')
 
 
 @admin.register(Artifact)
-class ArtifactAdmin(admin.ModelAdmin):
+class ArtifactAdmin(BaseModelAdmin):
     list_display = (
         'pulp_id',
         'pulp_created',
@@ -81,7 +89,7 @@ class ContentAdmin(admin.ModelAdmin):
 
 
 @admin.register(ContentArtifact)
-class ContentArtifactAdmin(admin.ModelAdmin):
+class ContentArtifactAdmin(BaseModelAdmin):
     list_display = (
         'pulp_id',
         'pulp_created',
