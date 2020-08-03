@@ -204,7 +204,7 @@ def enqueue_with_reservation(
             return r
         if isinstance(r, Model):
             return util.get_url(r)
-        raise ValueError(_("Must be (str|Model)"))
+        raise ValueError(_("Task lock resource must be (str|Model) but got a {resource_type}".format(resource_type=type(r))))
 
     resources = {as_url(r) for r in resources}
     inner_task_id = str(uuid.uuid4())
