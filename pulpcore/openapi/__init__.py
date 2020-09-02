@@ -369,65 +369,68 @@ class PulpSchemaGenerator(SchemaGenerator):
             plugins = [request.query_params["plugin"]]
 
         is_public = None if public else request
-        for path, path_regex, method, view in self._get_paths_and_endpoints(is_public):
+        for orig_path, path_regex, method, view in self._get_paths_and_endpoints(is_public):
             plugin = view.__module__.split(".")[0]
             if plugins and plugin not in plugins:  # plugin filter
                 continue
 
-            if not self.has_view_permissions(path, method, view):
+            if not self.has_view_permissions(orig_path, method, view):
                 continue
 
             schema = view.schema
 
-            path = self.convert_endpoint_path_params(path, view, schema)
+            # Add an endpoint for the abstract '{repository_href}' style as well as any concrete
+            # endpoints we know (like '/pulp/v3/repositories/ansible/ansible/')
+            endpoint_paths = [orig_path, self.convert_endpoint_path_params(orig_path, view, schema)]
 
-            # beware that every access to schema yields a fresh object (descriptor pattern)
-            operation = schema.get_operation(path, path_regex, method, self.registry)
+            for path in endpoint_paths:
+                # beware that every access to schema yields a fresh object (descriptor pattern)
+                operation = schema.get_operation(path, path_regex, method, self.registry)
 
-            # operation was manually removed via @extend_schema
-            if not operation:
-                continue
+                # operation was manually removed via @extend_schema
+                if not operation:
+                    continue
 
-            # Removes html tags from OpenAPI schema
-            if "include_html" not in request.query_params:
-                operation["description"] = strip_tags(operation["description"])
+                # Removes html tags from OpenAPI schema
+                if "include_html" not in request.query_params:
+                    operation["description"] = strip_tags(operation["description"])
 
-            # operationId as actions [list, read, sync, modify, create, delete, ...]
-            if request and "bindings" in request.query_params:
-                tokenized_path = schema._tokenize_path()
-                tokenized_path = "_".join(
-                    [t.replace("-", "_").replace("/", "_").lower() for t in tokenized_path]
-                )
-                action = schema.get_operation_id_action()
-                if f"{tokenized_path}_{action}" == operation["operationId"]:
-                    operation["operationId"] = action
+                # operationId as actions [list, read, sync, modify, create, delete, ...]
+                if request and "bindings" in request.query_params:
+                    tokenized_path = schema._tokenize_path()
+                    tokenized_path = "_".join(
+                        [t.replace("-", "_").replace("/", "_").lower() for t in tokenized_path]
+                    )
+                    action = schema.get_operation_id_action()
+                    if f"{tokenized_path}_{action}" == operation["operationId"]:
+                        operation["operationId"] = action
 
-            # Adding query parameters
-            if "parameters" in operation and schema.method.lower() == "get":
-                fields_paramenter = build_parameter_type(
-                    name="fields",
-                    schema={"type": "string"},
-                    location=OpenApiParameter.QUERY,
-                    description="A list of fields to include in the response.",
-                )
-                operation["parameters"].append(fields_paramenter)
-                not_fields_paramenter = build_parameter_type(
-                    name="exclude_fields",
-                    schema={"type": "string"},
-                    location=OpenApiParameter.QUERY,
-                    description="A list of fields to exclude from the response.",
-                )
-                operation["parameters"].append(not_fields_paramenter)
+                # Adding query parameters
+                if "parameters" in operation and schema.method.lower() == "get":
+                    fields_paramenter = build_parameter_type(
+                        name="fields",
+                        schema={"type": "string"},
+                        location=OpenApiParameter.QUERY,
+                        description="A list of fields to include in the response.",
+                    )
+                    operation["parameters"].append(fields_paramenter)
+                    not_fields_paramenter = build_parameter_type(
+                        name="exclude_fields",
+                        schema={"type": "string"},
+                        location=OpenApiParameter.QUERY,
+                        description="A list of fields to exclude from the response.",
+                    )
+                    operation["parameters"].append(not_fields_paramenter)
 
-            # Normalise path for any provided mount url.
-            if path.startswith("/"):
-                path = path[1:]
+                # Normalise path for any provided mount url.
+                if path.startswith("/"):
+                    path = path[1:]
 
-            if not path.startswith("{"):
-                path = urljoin(self.url or "/", path)
+                if not path.startswith("{"):
+                    path = urljoin(self.url or "/", path)
 
-            result.setdefault(path, {})
-            result[path][method.lower()] = operation
+                result.setdefault(path, {})
+                result[path][method.lower()] = operation
 
         return result
 
